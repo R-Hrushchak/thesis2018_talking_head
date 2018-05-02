@@ -6,56 +6,62 @@ using UnityEngine.UI;
 public class NDIPlayer : MonoBehaviour {
     public NDILoader loader;
 
+    private bool isPlaying;
+
     // Head (reference)
     public GameObject refObject;
-    private Transform refInitialTransform;
+    private Vector3 refInitialPosition;
     private Quaternion refInitialRotation;
 
     // Jaw
     public GameObject jawObject;
-    private Transform jawInitialTransform;
+    private Vector3 jawInitialPosition;
     private Quaternion jawInitialRotation;
 
     // Tongue back
     public GameObject tongueBackObject;
-    private Transform tongueBackInitialTransform;
+    private Vector3 tongueBackInitialPosition;
     private Quaternion tongueBackInitialRotation;
 
     // Tongue middle
     public GameObject tongueMidObject;
-    private Transform tongueMidInitialTransform;
+    private Vector3 tongueMidInitialPosition;
     private Quaternion tongueMidInitialRotation;
 
     // Tongue tip
     public GameObject tongueTipObject;
-    private Transform tongueTipInitialTransform;
+    private Vector3 tongueTipInitialPosition;
     private Quaternion tongueTipInitialRotation;
 
     // Lip corner left
     public GameObject lipLObject;
-    private Transform lipLInitialTransform;
+    private Vector3 lipLInitialPosition;
     private Quaternion lipLInitialRotation;
     
     // Lip corner right
     public GameObject lipRObject;
-    private Transform lipRInitialTransform;
+    private Vector3 lipRInitialPosition;
     private Quaternion lipRInitialRotation;
 
     // Lip half left
     public GameObject lipLowerHalfLeftObject;
-    private Transform lipLowerHalfLeftInitialTransform;
+    private Vector3 lipLowerHalfLeftInitialPosition;
+    private Quaternion lipLowerHalfLeftInitialRotation;
 
     // Lip half right
     public GameObject lipLowerHalfRightObject;
-    private Transform lipLowerHalfRightInitialTransform;
+    private Vector3 lipLowerHalfRightInitialPosition;
+    private Quaternion lipLowerHalfRightInitialRotation;
 
     // Lip upper-half left
     public GameObject lipUpperHalfLeftObject;
-    private Transform lipUpperHalfLeftInitialTransform;
+    private Vector3 lipUpperHalfLeftInitialPosition;
+    private Quaternion lipUpperHalfLeftInitialRotation;
 
     // Lip upper-half right
     public GameObject lipUpperHalfRightObject;
-    private Transform lipUpperHalfRightInitialTransform;
+    private Vector3 lipUpperHalfRightInitialPosition;
+    private Quaternion lipUpperHalfRightInitialRotation;
 
     private List<MeasureData> sensorDataList;
     private AudioSource audio;
@@ -72,20 +78,45 @@ public class NDIPlayer : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        refInitialTransform = refObject.transform;
-        jawInitialTransform = jawObject.transform;
-        tongueBackInitialTransform = tongueBackObject.transform;
-        tongueMidInitialTransform = tongueMidObject.transform;
-        tongueTipInitialTransform = tongueTipObject.transform;
-        lipLInitialTransform = lipLObject.transform;
-        lipRInitialTransform = lipRObject.transform;
-        lipLowerHalfLeftInitialTransform = lipLowerHalfLeftObject.transform;
-        lipLowerHalfRightInitialTransform = lipLowerHalfRightObject.transform;
-        lipUpperHalfLeftInitialTransform = lipUpperHalfLeftObject.transform;
-        lipUpperHalfRightInitialTransform = lipUpperHalfRightObject.transform;
+        isPlaying = false;
+    }
+
+    public void Reset()
+    {
+        StopAllCoroutines();
+        audio.Stop();
+
+        // Reset positions
+        refObject.transform.localPosition = refInitialPosition;
+        jawObject.transform.localPosition = jawInitialPosition;
+        tongueBackObject.transform.localPosition = tongueBackInitialPosition;
+        tongueMidObject.transform.localPosition = tongueMidInitialPosition;
+        tongueTipObject.transform.localPosition = tongueTipInitialPosition;
+        lipLObject.transform.localPosition = lipLInitialPosition;
+        lipRObject.transform.localPosition = lipRInitialPosition;
+        lipLowerHalfLeftObject.transform.localPosition = lipLowerHalfLeftInitialPosition;
+        lipLowerHalfRightObject.transform.localPosition = lipLowerHalfRightInitialPosition;
+        lipUpperHalfLeftObject.transform.localPosition = lipUpperHalfLeftInitialPosition;
+        lipUpperHalfRightObject.transform.localPosition = lipUpperHalfRightInitialPosition;
+
+        // Reset rotations
+        refObject.transform.localRotation = refInitialRotation;
+        jawObject.transform.localRotation = jawInitialRotation;
+        tongueBackObject.transform.localRotation = tongueBackInitialRotation;
+        tongueMidObject.transform.localRotation = tongueMidInitialRotation;
+        tongueTipObject.transform.localRotation = tongueTipInitialRotation;
+        lipLObject.transform.localRotation = lipLInitialRotation;
+        lipRObject.transform.localRotation = lipRInitialRotation;
+
+        isPlaying = false;
     }
 
     public void Play () {
+        if (isPlaying)
+        {
+            return;
+        }
+
         if (loader == null)
         {
             return;
@@ -98,6 +129,7 @@ public class NDIPlayer : MonoBehaviour {
         audio = GetComponent<AudioSource>();
         audio.clip = loader.audioClip;
 
+        SetInitialTransforms();
         StartCoroutine(PlayData());
     }
 
@@ -115,67 +147,43 @@ public class NDIPlayer : MonoBehaviour {
         // Set initial positions
 
         // Head
-        Vector3 refInitialPosition = refInitialTransform.localPosition;
         Vector3 refInitialPositionFromSensor = new Vector3(sensorRef.X, sensorRef.Y, sensorRef.Z);
 
         // Jaw
-        Vector3 jawInitialPosition = jawInitialTransform.localPosition;
         Vector3 jawInitialPositionFromSensor = new Vector3(sensorJaw.X, sensorJaw.Y, sensorJaw.Z);
 
         // Tongue back
-        Vector3 tongueBackInitialPosition = tongueBackInitialTransform.localPosition;
         Vector3 tongueBackInitialPositionFromSensor = new Vector3(sensorTongueBack.X, sensorTongueBack.Y, sensorTongueBack.Z);
 
         // Tongue middle
-        Vector3 tongueMidInitialPosition = tongueMidInitialTransform.localPosition;
         Vector3 tongueMidInitialPositionFromSensor = new Vector3(sensorTongueMid.X, sensorTongueMid.Y, sensorTongueMid.Z);
 
         // Tongue tip
-        Vector3 tongueTipInitialPosition = tongueTipInitialTransform.localPosition;
         Vector3 tongueTipInitialPositionFromSensor = new Vector3(sensorTongueTip.X, sensorTongueTip.Y, sensorTongueTip.Z);
 
         // Lip corner left
-        Vector3 lipLInitialPosition = lipLInitialTransform.localPosition;
         Vector3 lipLInitialPositionFromSensor = new Vector3(sensorLipL.X, sensorLipL.Y, sensorLipL.Z);
 
         // Lip corner right
-        Vector3 lipRInitialPosition = lipRInitialTransform.localPosition;
         Vector3 lipRInitialPositionFromSensor = new Vector3(sensorLipR.X, sensorLipR.Y, sensorLipR.Z);
-
-        // Lip lower-half left
-        Vector3 lipLowerHalfLeftInitialPosition = lipLowerHalfLeftInitialTransform.localPosition;
-
-        // Lip lower-half right
-        Vector3 lipLowerHalfRightInitialPosition = lipLowerHalfRightInitialTransform.localPosition;
-
-        // Lip upper-half left
-        Vector3 lipUpperHalfLeftInitialPosition = lipUpperHalfLeftInitialTransform.localPosition;
-
-        // Lip upper-half right
-        Vector3 lipUpperHalfRightInitialPosition = lipUpperHalfRightInitialTransform.localPosition;
 
         // set end
 
         // Set initial rotations
 
         // Head
-        refInitialRotation = refInitialTransform.localRotation;
         Quaternion refInitialRotationFromSensor = new Quaternion(sensorRef.Qx, sensorRef.Qy, sensorRef.Qz, sensorRef.Q0); 
         
         // Jaw
-        jawInitialRotation = jawInitialTransform.localRotation;
         Quaternion jawInitialRotationFromSensor = new Quaternion(sensorJaw.Qx, sensorJaw.Qy, sensorJaw.Qz, sensorJaw.Q0);
 
         // Tongue back
-        tongueBackInitialRotation = tongueBackInitialTransform.localRotation;
         Quaternion tongueBackInitialRotationFromSensor = new Quaternion(sensorTongueBack.Qx, sensorTongueBack.Qy, sensorTongueTip.Qz, sensorTongueTip.Q0);
 
         // Tongue middle
-        tongueMidInitialRotation = tongueMidInitialTransform.localRotation;
         Quaternion tongueMidInitialRotationFromSensor = new Quaternion(sensorTongueMid.Qx, sensorTongueMid.Qy, sensorTongueMid.Qz, sensorTongueMid.Q0);
 
         // Tongue tip
-        tongueTipInitialRotation = tongueTipInitialTransform.localRotation;
         Quaternion tongueTipInitialRotationFromSensor = new Quaternion(sensorTongueTip.Qx, sensorTongueTip.Qy, sensorTongueTip.Qz, sensorTongueTip.Q0);
 
         // set end
@@ -252,7 +260,7 @@ public class NDIPlayer : MonoBehaviour {
             // Jaw
             Quaternion jawRotation = new Quaternion(sensorJaw.Qx, sensorJaw.Qy, sensorJaw.Qz, sensorJaw.Q0);
             Quaternion jawTargetRotation = jawInitialRotation * (jawInitialRotationFromSensor * Quaternion.Inverse(jawRotation));
-            jawObject.transform.localRotation = jawTargetRotation;
+            jawObject.transform.localRotation = Quaternion.Slerp(jawInitialRotation, jawTargetRotation, 0.5f);
             //jawObject.GetComponent<InterpolatedRotation>().targetRotation = jawTargetRotation; // interpolated
 
             // Tongue back
@@ -274,5 +282,65 @@ public class NDIPlayer : MonoBehaviour {
 
             yield return null;
         }
+    }
+
+    void SetInitialTransforms()
+    {
+        SetInitialPositions();
+        SetInitialRotations();
+    }
+
+    void SetInitialRotations()
+    {
+        // Head
+        refInitialRotation = refObject.transform.localRotation;
+
+        // Jaw
+        jawInitialRotation = jawObject.transform.localRotation;
+
+        // Tongue back
+        tongueBackInitialRotation = tongueBackObject.transform.localRotation;
+
+        // Tongue middle
+        tongueMidInitialRotation = tongueMidObject.transform.localRotation;
+
+        // Tongue tip
+        tongueTipInitialRotation = tongueTipObject.transform.localRotation;
+    }
+
+    void SetInitialPositions()
+    {
+        // Head
+        refInitialPosition = refObject.transform.localPosition;
+
+        // Jaw
+        jawInitialPosition = jawObject.transform.localPosition;
+
+        // Tongue back
+        tongueBackInitialPosition = tongueBackObject.transform.localPosition;
+
+        // Tongue middle
+        tongueMidInitialPosition = tongueMidObject.transform.localPosition;
+
+        // Tongue tip
+        tongueTipInitialPosition = tongueTipObject.transform.localPosition;
+
+        // Lip corner left
+        lipLInitialPosition = lipLObject.transform.localPosition;
+
+        // Lip corner right
+        lipRInitialPosition = lipRObject.transform.localPosition;
+
+        // Lip lower-half left
+        lipLowerHalfLeftInitialPosition = lipLowerHalfLeftObject.transform.localPosition;
+
+        // Lip lower-half right
+        lipLowerHalfRightInitialPosition = lipLowerHalfRightObject.transform.localPosition;
+
+        // Lip upper-half left
+        lipUpperHalfLeftInitialPosition = lipUpperHalfLeftObject.transform.localPosition;
+
+        // Lip upper-half right
+        lipUpperHalfRightInitialPosition = lipUpperHalfRightObject.transform.localPosition;
     }
 }
