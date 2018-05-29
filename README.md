@@ -11,4 +11,5 @@ Located in the folder **NDI_Recordings_test**
 
 # Build preview
 - Just click the **Play** button as shown on a screenshot below
-![build_preview](https://raw.githubusercontent.com/R-Hrushchak/thesis2018_talking_head/master//builds_public/demo.png)
+
+![build_preview](https://raw.githubusercontent.com/R-Hrushchak/thesis2018_talking_head/master/builds_public/demo.png)
