@@ -107,6 +107,10 @@ public class NDIPlayer : MonoBehaviour {
         tongueTipObject.transform.localRotation = tongueTipInitialRotation;
         lipLObject.transform.localRotation = lipLInitialRotation;
         lipRObject.transform.localRotation = lipRInitialRotation;
+        lipLowerHalfLeftObject.transform.localRotation = lipLowerHalfLeftInitialRotation;
+        lipLowerHalfRightObject.transform.localRotation = lipLowerHalfRightInitialRotation;
+        lipUpperHalfLeftObject.transform.localRotation = lipUpperHalfLeftInitialRotation;
+        lipUpperHalfRightObject.transform.localRotation = lipUpperHalfRightInitialRotation;
 
         isPlaying = false;
     }
@@ -116,6 +120,8 @@ public class NDIPlayer : MonoBehaviour {
         {
             return;
         }
+
+        isPlaying = true;
 
         if (loader == null)
         {
@@ -306,6 +312,24 @@ public class NDIPlayer : MonoBehaviour {
 
         // Tongue tip
         tongueTipInitialRotation = tongueTipObject.transform.localRotation;
+
+        // Lip corner left
+        lipLInitialRotation = lipLObject.transform.localRotation;
+
+        // Lip corner right
+        lipRInitialRotation = lipRObject.transform.localRotation;
+
+        // Lip lower-half left
+        lipLowerHalfLeftInitialRotation = lipLowerHalfLeftObject.transform.localRotation;
+
+        // Lip lower-half right
+        lipLowerHalfRightInitialRotation = lipLowerHalfRightObject.transform.localRotation;
+
+        // Lip upper-half left
+        lipUpperHalfLeftInitialRotation = lipUpperHalfLeftObject.transform.localRotation;
+
+        // Lip upper-half right
+        lipUpperHalfRightInitialRotation = lipUpperHalfRightObject.transform.localRotation;
     }
 
     void SetInitialPositions()
